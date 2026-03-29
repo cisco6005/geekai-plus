@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2025-09-08 08:22:59
+-- 生成日期： 2026-03-03 00:52:24
 -- 服务器版本： 8.0.33
 -- PHP 版本： 8.1.18
 
@@ -26,30 +26,6 @@ USE `geekai_plus`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `geekai_3d_jobs`
---
-
-DROP TABLE IF EXISTS `geekai_3d_jobs`;
-CREATE TABLE `geekai_3d_jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` int NOT NULL COMMENT '用户ID',
-  `type` varchar(20) NOT NULL COMMENT 'API类型 (tencent/gitee)',
-  `power` int NOT NULL COMMENT '消耗算力',
-  `task_id` varchar(100) DEFAULT NULL COMMENT '第三方任务ID',
-  `file_url` varchar(1024) DEFAULT NULL COMMENT '生成的3D模型文件地址',
-  `preview_url` varchar(1024) DEFAULT NULL COMMENT '预览图片地址',
-  `model` varchar(50) DEFAULT NULL COMMENT '使用的3D模型类型',
-  `status` varchar(20) NOT NULL DEFAULT 'pending' COMMENT '任务状态',
-  `err_msg` varchar(1024) DEFAULT NULL COMMENT '错误信息',
-  `params` text COMMENT '任务参数(JSON格式)',
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `raw_data` text COMMENT 'API返回的原始数据'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `geekai_admin_users`
 --
 
@@ -61,7 +37,7 @@ CREATE TABLE `geekai_admin_users` (
   `salt` char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码盐',
   `status` tinyint(1) NOT NULL COMMENT '当前状态',
   `last_login_at` bigint NOT NULL COMMENT '最后登录时间',
-  `last_login_ip` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '最后登录 IP',
+  `last_login_ip` char(32) NOT NULL COMMENT '最后登录 IP',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime NOT NULL COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统用户' ROW_FORMAT=DYNAMIC;
@@ -71,7 +47,7 @@ CREATE TABLE `geekai_admin_users` (
 --
 
 INSERT INTO `geekai_admin_users` (`id`, `username`, `password`, `salt`, `status`, `last_login_at`, `last_login_ip`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '6d17e80c87d209efb84ca4b2e0824f549d09fac8b2e1cc698de5bb5e1d75dfd0', 'mmrql75o', 1, 1757235343, '::1', '2024-03-11 16:30:20', '2025-09-07 16:55:43');
+(1, 'admin', '6d17e80c87d209efb84ca4b2e0824f549d09fac8b2e1cc698de5bb5e1d75dfd0', 'mmrql75o', 1, 1767137733, '::1', '2024-03-11 16:30:20', '2025-12-31 07:35:34');
 
 -- --------------------------------------------------------
 
@@ -194,19 +170,18 @@ CREATE TABLE `geekai_chat_models` (
 --
 
 INSERT INTO `geekai_chat_models` (`id`, `type`, `name`, `value`, `sort_num`, `enabled`, `power`, `temperature`, `max_tokens`, `max_context`, `open`, `key_id`, `options`, `created_at`, `updated_at`, `desc`, `tag`) VALUES
-(1, 'chat', 'gpt-4o-mini', 'gpt-4o-mini', 2, 1, 1, 1.0, 1024, 16384, 1, 0, '{}', '2023-08-23 12:06:36', '2025-09-08 15:27:21', '', ''),
-(15, 'chat', 'GPT-4O(联网版本)', 'gpt-4o-all', 5, 1, 30, 1.0, 4096, 32768, 1, 0, '{}', '2024-01-15 11:32:52', '2025-08-12 08:23:52', '', ''),
-(39, 'chat', 'Claude35-snonet', 'claude-3-5-sonnet-20240620', 6, 1, 2, 1.0, 4000, 200000, 1, 0, '', '2024-05-29 15:04:19', '2025-08-12 08:23:52', '', ''),
-(42, 'chat', 'DeekSeek', 'deepseek-chat', 7, 1, 1, 1.0, 4096, 32768, 1, 0, '{}', '2024-06-27 16:13:01', '2025-08-12 08:23:52', '', ''),
-(46, 'chat', 'GPT-4O-绘图', 'gpt-4o-image', 4, 1, 1, 1.0, 2048, 32000, 1, 0, '{}', '2024-07-22 13:53:41', '2025-08-12 08:23:52', '', ''),
-(51, 'chat', 'O1-mini-all', 'o1-mini-all', 8, 1, 1, 0.9, 1024, 8192, 1, 0, '{}', '2024-09-29 11:40:52', '2025-08-12 08:23:52', '', ''),
-(53, 'chat', 'OpenAI 高级语音', 'advanced-voice', 9, 1, 10, 0.9, 1024, 8192, 1, 0, '{}', '2024-12-20 10:34:45', '2025-08-12 08:23:52', '', ''),
-(56, 'img', 'flux-1-schnell', 'flux-1-schnell', 10, 1, 1, 0.9, 1024, 8192, 1, 0, '{}', '2024-12-25 15:30:27', '2025-08-12 08:23:52', '', ''),
-(57, 'img', 'nano-banana', 'nano-banana', 11, 1, 20, 0.9, 1024, 8192, 1, 0, '{}', '2024-12-25 16:54:06', '2025-09-08 15:27:26', '', 'gemini'),
-(58, 'img', 'SD-3-medium', 'stable-diffusion-3-medium', 12, 0, 1, 0.9, 1024, 8192, 1, 0, '{}', '2024-12-27 10:03:28', '2025-09-06 13:03:14', '', ''),
-(60, 'tts', 'TTS-01', 'tts-1', 1, 1, 1, 0.9, 1024, 8192, 1, 0, '{\"voice\":\"nova\"}', '2025-05-28 20:39:10', '2025-08-12 08:23:52', '', ''),
-(61, 'chat', 'Gemini-2.5-PRO', 'gemini-2.5-pro-preview-06-05', 3, 1, 5, 0.9, 8192, 64000, 1, 0, '{}', '2025-06-18 11:48:54', '2025-08-12 08:23:52', '谷歌 Gemini 最强模型', 'Gemini'),
-(64, 'chat', 'nano-banana', 'nano-banana', 0, 1, 10, 0.9, 1024, 8192, 1, 0, '{}', '2025-08-30 12:57:54', '2025-09-08 15:27:15', '', 'gemini');
+(1, 'chat', 'gpt-4o-mini', 'gpt-4o-mini', 1, 1, 1, 1.0, 1024, 16384, 1, 10, '{}', '2023-08-23 12:06:36', '2025-09-21 12:20:14', '', ''),
+(15, 'chat', 'GPT-4O(联网版本)', 'gpt-4o-all', 6, 1, 30, 1.0, 4096, 32768, 1, 0, '{}', '2024-01-15 11:32:52', '2025-09-20 18:08:36', '', ''),
+(42, 'chat', 'DeekSeek', 'deepseek-chat', 8, 1, 1, 1.0, 4096, 32768, 1, 11, '{}', '2024-06-27 16:13:01', '2025-09-20 18:14:28', '', ''),
+(46, 'chat', 'GPT-4O-绘图', 'gpt-4o-image', 5, 1, 1, 1.0, 2048, 32000, 1, 0, '{}', '2024-07-22 13:53:41', '2025-09-20 18:08:36', '', ''),
+(51, 'chat', 'DeepSeek-R1', 'deepseek-reasoner', 9, 1, 1, 0.9, 1024, 8192, 1, 11, '{}', '2024-09-29 11:40:52', '2025-09-20 18:22:43', 'DeepSeek 推理模型', 'deepseek'),
+(53, 'chat', 'Sora2 视频', 'sora-2', 10, 1, 10, 0.9, 1024, 8192, 1, 2, '{}', '2024-12-20 10:34:45', '2025-10-29 10:39:17', '', 'openai'),
+(56, 'img', 'flux-1-schnell', 'flux-1-schnell', 11, 1, 1, 0.9, 1024, 8192, 1, 3, '{}', '2024-12-25 15:30:27', '2025-10-30 07:22:01', '', ''),
+(57, 'img', 'VIP 绘图模型', 'nano-banana', 12, 1, 20, 0.9, 1024, 8192, 1, 12, '{}', '2024-12-25 16:54:06', '2025-10-24 10:46:27', '', 'gemini'),
+(58, 'chat', 'gpt-5-nano', 'gpt-5-nano', 13, 1, 1, 0.9, 4096, 128000, 1, 7, '{}', '2024-12-27 10:03:28', '2025-09-29 00:15:43', '', ''),
+(60, 'tts', 'TTS-01', 'tts-1', 3, 1, 1, 0.9, 1024, 8192, 1, 0, '{\"voice\":\"nova\"}', '2025-05-28 20:39:10', '2025-09-20 18:08:36', '', ''),
+(61, 'chat', 'Gemini-2.5-PRO', 'gemini-2.5-pro-preview-06-05', 4, 1, 5, 0.9, 8192, 64000, 1, 0, '{}', '2025-06-18 11:48:54', '2025-09-20 18:08:36', '谷歌 Gemini 最强模型', 'Gemini'),
+(64, 'img', 'Nano-Banana 高清', 'nano-banana-hd', 2, 1, 10, 0.9, 1024, 8192, 1, 10, '{}', '2025-08-30 12:57:54', '2026-03-01 16:30:24', '', 'gemini');
 
 -- --------------------------------------------------------
 
@@ -253,7 +228,7 @@ INSERT INTO `geekai_chat_roles` (`id`, `name`, `tid`, `marker`, `context_json`, 
 (38, '埃隆·马斯克', 0, 'elon_musk', '[{\"role\":\"user\",\"content\":\"在接下来的对话中，请以埃隆·马斯克的身份，站在埃隆·马斯克的视角仔细思考一下之后再回答我的问题。\"},{\"role\":\"assistant\",\"content\":\"好的，我将以埃隆·马斯克的身份来思考并回答你的问题。请问你有什么需要跟我探讨的吗？\"}]', '梦想要远大，如果你的梦想没有吓到你，说明你做得不对。', '/images/avatar/elon_musk.jpg', 1, 18, 0, '2023-05-30 14:10:24', '2024-11-08 16:30:32'),
 (39, '孔子', 5, 'kong_zi', '[{\"role\":\"user\",\"content\":\"在接下来的对话中，请以孔子的身份，站在孔子的视角仔细思考一下之后再回答我的问题。\"},{\"role\":\"assistant\",\"content\":\"好的，我将以孔子的身份来思考并回答你的问题。请问你有什么需要跟我探讨的吗？\"}]', '士不可以不弘毅，任重而道远。', '/images/avatar/kong_zi.jpg', 1, 19, 0, '2023-05-30 14:10:24', '2024-11-08 16:30:32'),
 (133, 'AI绘画提示词助手', 3, 'draw_prompt', '[{\"role\":\"system\",\"content\":\"Create a highly effective prompt to provide to an AI image generation tool in order to create an artwork based on a desired concept.\\n\\nPlease specify details about the artwork, such as the style, subject, mood, and other important characteristics you want the resulting image to have.\\n\\nRemeber, prompts should always be output in English.\\n\\n# Steps\\n\\n1. **Subject Description**: Describe the main subject of the image clearly. Include as much detail as possible about what should be in the scene. For example, \\\"a majestic lion roaring at sunrise\\\" or \\\"a futuristic city with flying cars.\\\"\\n  \\n2. **Art Style**: Specify the art style you envision. Possible options include \'realistic\', \'impressionist\', a specific artist name, or imaginative styles like \\\"cyberpunk.\\\" This helps the AI achieve your visual expectations.\\n\\n3. **Mood or Atmosphere**: Convey the feeling you want the image to evoke. For instance, peaceful, chaotic, epic, etc.\\n\\n4. **Color Palette and Lighting**: Mention color preferences or lighting. For example, \\\"vibrant with shades of blue and purple\\\" or \\\"dim and dramatic lighting.\\\"\\n\\n5. **Optional Features**: You can add any additional attributes, such as background details, attention to textures, or any specific kind of framing.\\n\\n# Output Format\\n\\n- **Prompt Format**: A descriptive phrase that includes key aspects of the artwork (subject, style, mood, colors, lighting, any optional features).\\n  \\nHere is an example of how the final prompt should look:\\n  \\n\\\"An ethereal landscape featuring towering ice mountains, in an impressionist style reminiscent of Claude Monet, with a serene mood. The sky is glistening with soft purples and whites, with a gentle morning sun illuminating the scene.\\\"\\n\\n**Please input the prompt words directly in English, and do not input any other explanatory statements**\\n\\n# Examples\\n\\n1. **Input**: \\n    - Subject: A white tiger in a dense jungle\\n    - Art Style: Realistic\\n    - Mood: Intense, mysterious\\n    - Lighting: Dramatic contrast with light filtering through leaves\\n  \\n   **Output Prompt**: \\\"A realistic rendering of a white tiger stealthily moving through a dense jungle, with an intense, mysterious mood. The lighting creates strong contrasts as beams of sunlight filter through a thick canopy of leaves.\\\"\\n\\n2. **Input**: \\n    - Subject: An enchanted castle on a floating island\\n    - Art Style: Fantasy\\n    - Mood: Majestic, magical\\n    - Colors: Bright blues, greens, and gold\\n  \\n   **Output Prompt**: \\\"A majestic fantasy castle on a floating island above the clouds, with bright blues, greens, and golds to create a magical, dreamy atmosphere. Textured cobblestone details and glistening waters surround the scene.\\\" \\n\\n# Notes\\n\\n- Ensure that you mix different aspects to get a comprehensive and visually compelling prompt.\\n- Be as descriptive as possible as it often helps generate richer, more detailed images.\\n- If you want the image to resemble a particular artist\'s work, be sure to mention the artist explicitly. e.g., \\\"in the style of Van Gogh.\\\"\"}]', '你好，请输入你要创作图片大概内容描述，我将为您生成专业的 AI 绘画指令。', 'https://blog.img.r9it.com/f38e2357c3ccd9412184e42273a7451a.png', 1, 3, 36, '2024-11-06 15:32:48', '2024-11-12 16:11:25'),
-(134, '提示词专家', 3, 'prompt_engineer', '[{\"role\":\"system\",\"content\":\"Given a task description or existing prompt, produce a detailed system prompt to guide a language model in completing the task effectively.\\n\\nPlease remember, the final output must be the same language with user’s input.\\n\\n# Guidelines\\n\\n- Understand the Task: Grasp the main objective, goals, requirements, constraints, and expected output.\\n- Minimal Changes: If an existing prompt is provided, improve it only if it\'s simple. For complex prompts, enhance clarity and add missing elements without altering the original structure.\\n- Reasoning Before Conclusions**: Encourage reasoning steps before any conclusions are reached. ATTENTION! If the user provides examples where the reasoning happens afterward, REVERSE the order! NEVER START EXAMPLES WITH CONCLUSIONS!\\n    - Reasoning Order: Call out reasoning portions of the prompt and conclusion parts (specific fields by name). For each, determine the ORDER in which this is done, and whether it needs to be reversed.\\n    - Conclusion, classifications, or results should ALWAYS appear last.\\n- Examples: Include high-quality examples if helpful, using placeholders [in brackets] for complex elements.\\n   - What kinds of examples may need to be included, how many, and whether they are complex enough to benefit from placeholders.\\n- Clarity and Conciseness: Use clear, specific language. Avoid unnecessary instructions or bland statements.\\n- Formatting: Use markdown features for readability. DO NOT USE ``` CODE BLOCKS UNLESS SPECIFICALLY REQUESTED.\\n- Preserve User Content: If the input task or prompt includes extensive guidelines or examples, preserve them entirely, or as closely as possible. If they are vague, consider breaking down into sub-steps. Keep any details, guidelines, examples, variables, or placeholders provided by the user.\\n- Constants: DO include constants in the prompt, as they are not susceptible to prompt injection. Such as guides, rubrics, and examples.\\n- Output Format: Explicitly the most appropriate output format, in detail. This should include length and syntax (e.g. short sentence, paragraph, JSON, etc.)\\n    - For tasks outputting well-defined or structured data (classification, JSON, etc.) bias toward outputting a JSON.\\n    - JSON should never be wrapped in code blocks (```) unless explicitly requested.\\n\\nThe final prompt you output should adhere to the following structure below. Do not include any additional commentary, only output the completed system prompt. SPECIFICALLY, do not include any additional messages at the start or end of the prompt. (e.g. no \\\"---\\\")\\n\\n[Concise instruction describing the task - this should be the first line in the prompt, no section header]\\n\\n[Additional details as needed.]\\n\\n[Optional sections with headings or bullet points for detailed steps.]\\n\\n# Steps [optional]\\n\\n[optional: a detailed breakdown of the steps necessary to accomplish the task]\\n\\n# Output Format\\n\\n[Specifically call out how the output should be formatted, be it response length, structure e.g. JSON, markdown, etc]\\n\\n# Examples [optional]\\n\\n[Optional: 1-3 well-defined examples with placeholders if necessary. Clearly mark where examples start and end, and what the input and output are. User placeholders as necessary.]\\n[If the examples are shorter than what a realistic example is expected to be, make a reference with () explaining how real examples should be longer / shorter / different. AND USE PLACEHOLDERS! ]\\n\\n# Notes [optional]\\n\\n[optional: edge cases, details, and an area to call or repeat out specific important considerations]\"}]', '不知道如何向 AI 发问？说出想法，提示词专家帮你精心设计提示词', 'https://blog.img.r9it.com/a8908d04c3ccd941b00a612e27df086e.png', 1, 2, 36, '2024-11-07 18:06:39', '2025-02-22 22:34:36');
+(134, '提示词专家', 3, 'prompt_engineer', '[{\"role\":\"system\",\"content\":\"Given a task description or existing prompt, produce a detailed system prompt to guide a language model in completing the task effectively.\\n\\nPlease remember, the final output must be the same language with user’s input.\\n\\n# Guidelines\\n\\n- Understand the Task: Grasp the main objective, goals, requirements, constraints, and expected output.\\n- Minimal Changes: If an existing prompt is provided, improve it only if it\'s simple. For complex prompts, enhance clarity and add missing elements without altering the original structure.\\n- Reasoning Before Conclusions**: Encourage reasoning steps before any conclusions are reached. ATTENTION! If the user provides examples where the reasoning happens afterward, REVERSE the order! NEVER START EXAMPLES WITH CONCLUSIONS!\\n    - Reasoning Order: Call out reasoning portions of the prompt and conclusion parts (specific fields by name). For each, determine the ORDER in which this is done, and whether it needs to be reversed.\\n    - Conclusion, classifications, or results should ALWAYS appear last.\\n- Examples: Include high-quality examples if helpful, using placeholders [in brackets] for complex elements.\\n   - What kinds of examples may need to be included, how many, and whether they are complex enough to benefit from placeholders.\\n- Clarity and Conciseness: Use clear, specific language. Avoid unnecessary instructions or bland statements.\\n- Formatting: Use markdown features for readability. DO NOT USE ``` CODE BLOCKS UNLESS SPECIFICALLY REQUESTED.\\n- Preserve User Content: If the input task or prompt includes extensive guidelines or examples, preserve them entirely, or as closely as possible. If they are vague, consider breaking down into sub-steps. Keep any details, guidelines, examples, variables, or placeholders provided by the user.\\n- Constants: DO include constants in the prompt, as they are not susceptible to prompt injection. Such as guides, rubrics, and examples.\\n- Output Format: Explicitly the most appropriate output format, in detail. This should include length and syntax (e.g. short sentence, paragraph, JSON, etc.)\\n    - For tasks outputting well-defined or structured data (classification, JSON, etc.) bias toward outputting a JSON.\\n    - JSON should never be wrapped in code blocks (```) unless explicitly requested.\\n\\nThe final prompt you output should adhere to the following structure below. Do not include any additional commentary, only output the completed system prompt. SPECIFICALLY, do not include any additional messages at the start or end of the prompt. (e.g. no \\\"---\\\")\\n\\n[Concise instruction describing the task - this should be the first line in the prompt, no section header]\\n\\n[Additional details as needed.]\\n\\n[Optional sections with headings or bullet points for detailed steps.]\\n\\n# Steps [optional]\\n\\n[optional: a detailed breakdown of the steps necessary to accomplish the task]\\n\\n# Output Format\\n\\n[Specifically call out how the output should be formatted, be it response length, structure e.g. JSON, markdown, etc]\\n\\n# Examples [optional]\\n\\n[Optional: 1-3 well-defined examples with placeholders if necessary. Clearly mark where examples start and end, and what the input and output are. User placeholders as necessary.]\\n[If the examples are shorter than what a realistic example is expected to be, make a reference with () explaining how real examples should be longer / shorter / different. AND USE PLACEHOLDERS! ]\\n\\n# Notes [optional]\\n\\n[optional: edge cases, details, and an area to call or repeat out specific important considerations]\"}]', '不知道如何向 AI 发问？说出想法，提示词专家帮你精心设计提示词', 'https://blog.img.r9it.com/a8908d04c3ccd941b00a612e27df086e.png', 1, 2, 61, '2024-11-07 18:06:39', '2025-09-20 11:45:02');
 
 -- --------------------------------------------------------
 
@@ -273,32 +248,24 @@ CREATE TABLE `geekai_configs` (
 --
 
 INSERT INTO `geekai_configs` (`id`, `name`, `value`) VALUES
-(1, 'system', '{\"title\":\"GeekAI 创作助手\",\"slogan\":\"我辈之人，先干为敬，让每一个人都能用好AI\",\"admin_title\":\"GeekAI 控制台\",\"logo\":\"/images/logo.png\",\"bar_logo\":\"/images/bar_logo.png\",\"register_ways\":[\"username\",\"email\",\"mobile\"],\"enabled_register\":true,\"order_pay_timeout\":600,\"vip_info_text\":\"月度会员，年度会员每月赠送 1000 点算力，赠送算力当月有效当月没有消费完的算力不结余到下个月。 点卡充值的算力长期有效。\",\"init_power\":10,\"daily_power\":1,\"invite_power\":10,\"mj_power\":20,\"sd_power\":5,\"suno_power\":50,\"luma_power\":120,\"keling_powers\":{\"kling-v1-5_pro_10\":840,\"kling-v1-5_pro_5\":420,\"kling-v1-5_std_10\":480,\"kling-v1-5_std_5\":240,\"kling-v1-6_pro_10\":840,\"kling-v1-6_pro_5\":420,\"kling-v1-6_std_10\":480,\"kling-v1-6_std_5\":240,\"kling-v1_pro_10\":840,\"kling-v1_pro_5\":420,\"kling-v1_std_10\":240,\"kling-v1_std_5\":120},\"advance_voice_power\":100,\"wechat_card_url\":\"/images/wx.png\",\"enable_context\":true,\"context_deep\":10,\"sd_neg_prompt\":\"nsfw, paintings,low quality,easynegative,ng_deepnegative ,lowres,bad anatomy,bad hands,bad feet\",\"mj_mode\":\"fast\",\"index_navs\":[1,5,13,19,9,12,6,20,8,10],\"copyright\":\"极客学长\",\"default_nickname\":\"\",\"icp\":\"粤ICP备19122051号\",\"enabled_verify\":false,\"email_white_list\":[\"qq.com\",\"163.com\",\"gmail.com\",\"hotmail.com\",\"126.com\",\"outlook.com\",\"foxmail.com\",\"yahoo.com\"],\"assistant_model_id\":0,\"max_file_size\":10}'),
-(3, 'notice', '{\"content\":\"## v4.2.9 更新日志\\n\\n- 功能优化：支持缩略图功能配置，支持本地存储，七牛云，腾讯云 OSS 和阿里云 OSS 四种存储介质。\\n- 功能优化：重构视频生成模块，支持 Sora2, Veo3.1, Luma, 可灵，通义万相，MiniMax 等视频生成模型。\\n- 功能新增：腾讯云短信服务 🔥🔥🔥\\n- 功能新增：支持腾讯云 OSS 存储，支持腾讯云 COS 文件上传和下载 🔥🔥🔥\\n- 功能新增：支持微信支付原生的 JSAPI 支付，支持微信公众号授权登录。🔥🔥🔥\\n- 功能优化：对话页面输入框支持粘贴剪切板内容上传截图 🔥🔥🔥\\n- 功能优化：给 Sora2 生成视频下载增加重试机制，防止因为网络不稳定导致下载失败 🎉🎉🎉\\n- Bug 修复：删除即梦 4.0 生图不支持的分片率参数，支持 1K, 2K, 4K 分辨率\\n- 功能优化：即梦 AI 新增 3.0 电商营销产品背景替换功能 🔥🔥🔥\\n- Bug 修复：调整 PC 端会员页面的列表样式，重构页面布局，移除多余的 css 样式，采用 tailwindcss 样式\\n- Bug 修复：修复管理后台重置管理密码不生效的问题\\n- Bug 修复：修复 Chat 页面输入框输入内容会自动滚动到最底部的问题\\n- Bug 修复：修复即梦视频生成任务 duration（视频时长） 参数不生效的问题 🎉🎉🎉\\n- Bug 修复：修复管理后台系统配置邮箱白名单更改不生效问题\\n- Bug 修复：修复聊天页面角色列表显示 system prompt 提示词的问题\\n\\n注意：当前站点仅为开源项目 \\u003ca style=\\\"color: #F56C6C\\\" href=\\\"https://github.com/yangjian102621/geekai\\\" target=\\\"_blank\\\"\\u003eGeekAI-Plus\\u003c/a\\u003e 的演示项目，本项目单纯就是给大家体验项目功能使用。\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n 如果觉得好用你就花几分钟自己部署一套，没有API KEY 的同学可以去下面几个推荐的中转站购买：\\n1、\\u003ca href=\\\"https://api.chat-plus.net\\\" target=\\\"_blank\\\"\\n   style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://api.chat-plus.net\\u003c/a\\u003e\\n2、\\u003ca href=\\\"https://api.geekai.me\\\" target=\\\"_blank\\\"\\n   style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://api.geekai.me\\u003c/a\\u003e\\n支持MidJourney，GPT，Claude，Google Gemmi，以及国内各个厂家的大模型，现在有超级优惠，价格远低于 OpenAI 官方。关于中转 API 的优势和劣势请参考 [中转API技术原理](https://docs.geekai.me/config/chat/#%E4%B8%AD%E8%BD%ACapi%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86)。GPT-3.5，GPT-4，DALL-E3 绘图......你都可以随意使用，无需魔法。\\n接入教程： \\u003ca href=\\\"https://docs.geekai.me\\\" target=\\\"_blank\\\"\\n             style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://docs.geekai.me\\u003c/a\\u003e\\n本项目源码地址：\\u003ca href=\\\"https://github.com/yangjian102621/geekai\\\" target=\\\"_blank\\\"\\u003ehttps://github.com/yangjian102621/geekai\\u003c/a\\u003e\"}'),
+(1, 'system', '{\"title\":\"GeekAI 创作助手\",\"slogan\":\"我辈之人，先干为敬，让每一个人都能用好AI\",\"admin_title\":\"GeekAI 控制台\",\"logo\":\"/images/logo.png\",\"bar_logo\":\"/images/bar_logo.png\",\"register_ways\":[\"username\",\"email\",\"mobile\"],\"enabled_register\":true,\"order_pay_timeout\":30,\"init_power\":10,\"daily_power\":1,\"invite_power\":10,\"mj_power\":20,\"mj_action_power\":5,\"mj_upscale_power\":5,\"mj_blend_power\":5,\"mj_swap_face_power\":5,\"mj_modal_power\":5,\"suno_power\":50,\"advance_voice_power\":100,\"wechat_card_url\":\"/images/wx.png\",\"enable_context\":true,\"context_deep\":10,\"mj_mode\":\"fast\",\"index_navs\":[1,5,13,19,9,12,20,8],\"index_page\":\"\",\"copyright\":\"极客学长\",\"icp\":\"粤ICP备19122051号\",\"ga_beian\":\"000000000001\",\"email_white_list\":[\"qq.com\",\"163.com\",\"gmail.com\",\"hotmail.com\",\"126.com\",\"outlook.com\",\"foxmail.com\",\"yahoo.com\",\"r9it.com\"],\"assistant_model_id\":1,\"max_file_size\":10,\"enable_mobile_site\":true}'),
+(3, 'notice', '{\"content\":\"## v4.3.0 更新日志\\n\\n- 移除 Stable Diffusion（SD）生图模块及相关前后端代码；数据库表 `geekai_sd_jobs` 保留不删除\\n- 支持批量导入用户信息，优化管理后台 UI 样式\\n- 重构图片生成模块：从 dalle 重命名为 image，支持查看任务详情 🔥🔥🔥\\n- 任务详情弹窗优化并补充图片任务创建时间\\n- 重构管理后台 UI，采用现代科技风格\\n- 功能优化：优化左侧菜单 UI，增加选中菜单对比度\\n\\n注意：当前站点仅为开源项目 \\u003ca style=\\\"color: #F56C6C\\\" href=\\\"https://github.com/yangjian102621/geekai\\\" target=\\\"_blank\\\"\\u003eGeekAI-Plus\\u003c/a\\u003e 的演示项目，本项目单纯就是给大家体验项目功能使用。\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n\\u003cstrong style=\\\"color: #F56C6C\\\"\\u003e体验额度用完之后请不要在当前站点进行任何充值操作！！！\\u003c/strong\\u003e\\n 如果觉得好用你就花几分钟自己部署一套，没有API KEY 的同学可以去下面几个推荐的中转站购买：\\n1、\\u003ca href=\\\"https://api.chat-plus.net\\\" target=\\\"_blank\\\"\\n   style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://api.chat-plus.net\\u003c/a\\u003e\\n2、\\u003ca href=\\\"https://api.geekai.me\\\" target=\\\"_blank\\\"\\n   style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://api.geekai.me\\u003c/a\\u003e\\n支持MidJourney，GPT，Claude，Google Gemmi，以及国内各个厂家的大模型，现在有超级优惠，价格远低于 OpenAI 官方。关于中转 API 的优势和劣势请参考 [中转API技术原理](https://docs.geekai.me/config/chat/#%E4%B8%AD%E8%BD%ACapi%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86)。GPT-3.5，GPT-4，DALL-E3 绘图......你都可以随意使用，无需魔法。\\n接入教程： \\u003ca href=\\\"https://docs.geekai.me\\\" target=\\\"_blank\\\"\\n             style=\\\"font-size: 20px;color:#F56C6C\\\"\\u003ehttps://docs.geekai.me\\u003c/a\\u003e\\n本项目源码地址：\\u003ca href=\\\"https://github.com/yangjian102621/geekai\\\" target=\\\"_blank\\\"\\u003ehttps://github.com/yangjian102621/geekai\\u003c/a\\u003e\"}'),
+(4, 'jimeng', '{\"access_key\":\"\",\"secret_key\":\"\",\"powers\":{\"doubao-seedream-4-0-250828\":20,\"i2i_dreamlight3_0_background_replace\":30,\"i2i_multi_style_zx2x\":20,\"jimeng_dream_actor_m1_gen_video_cv\":50,\"jimeng_high_aes_general_v21_L\":20,\"jimeng_i2i_v30\":20,\"jimeng_i2v_first_tail_v30\":25,\"jimeng_i2v_first_tail_v30_1080\":50,\"jimeng_i2v_first_v30\":25,\"jimeng_i2v_first_v30_1080\":50,\"jimeng_i2v_recamera_v30\":25,\"jimeng_realman_avatar_picture_omni_v2\":100,\"jimeng_t2i_v30\":20,\"jimeng_t2i_v31\":20,\"jimeng_t2i_v40\":20,\"jimeng_t2v_v30\":25,\"jimeng_t2v_v30_1080p\":50,\"jimeng_ti2v_v30_pro\":100,\"realman_avatar_picture_omni_v2\":100}}'),
+(12, 'api', '{\"api_url\":\"\",\"app_id\":\"\",\"jimeng_config\":{\"access_key\":\"\",\"secret_key\":\"\"},\"token\":\"\"}'),
+(14, 'license', '{\"key\":\"\",\"machine_id\":\"\",\"expired_at\":1869696000,\"is_active\":true,\"configs\":{\"user_num\":2000,\"de_copy\":false}}'),
+(15, 'payment', '{\"alipay\":{\"enabled\":true,\"app_id\":\"2021005184684719\",\"private_key\":\"\",\"domain\":\"http://localhost:8888\"},\"epay\":{\"app_id\":\"1001\",\"private_key\":\"\",\"api_url\":\"https://pay.geekai.pro\",\"domain\":\"http://localhost:8888\"},\"wxpay\":{\"enabled\":true,\"app_id\":\"\",\"mch_id\":\"1713888668\",\"serial_no\":\"\",\"private_key\":\"\",\"api_v3_key\":\"\",\"domain\":\"http://localhost:8888\"}}'),
+(16, 'oss', '{\"active\":\"local\",\"local\":{\"base_path\":\"./static/upload\",\"base_url\":\"/static/upload\",\"thumb_template\":\"?imageView2/4/w/{width}/h/{height}/q/75\"},\"minio\":{\"endpoint\":\"localhost:9010\",\"access_key\":\"\",\"access_secret\":\"\",\"bucket\":\"geekai\",\"domain\":\"http://localhost:9010\"},\"qiniu\":{\"zone\":\"z2\",\"access_key\":\"\",\"access_secret\":\"\",\"bucket\":\"kindeditor\",\"domain\":\"http://nk.img.r9it.com\",\"thumb_template\":\"?imageView2/4/w/{width}/h/{height}/q/75\"},\"aliyun\":{\"bucket\":\"geekai\",\"thumb_template\":\"?x-oss-process=image/resize,m_fill,w_{width},h_{height}\"},\"tencent\":{\"region\":\"ap-guangzhou\",\"secret_id\":\"\",\"secret_key\":\"\",\"bucket\":\"geekai-1255443522\",\"domain\":\"https://geekai-1255443522.cos.ap-guangzhou.myqcloud.com\",\"thumb_template\":\"?imageView2/1/w/{width}/h/{height}/format/jpg\"}}'),
 (17, 'agreement', '{\"content\":\"# 用户协议\"}'),
 (18, 'privacy', '{\"content\":\"隐私申明\"}'),
-(19, 'mark_map', '{\"content\":\"# GeekAI 演示站\\n\\n- 完整的开源系统，前端应用和后台管理系统皆可开箱即用。\\n- 基于 Websocket 实现，完美的打字机体验。\\n- 内置了各种预训练好的角色应用,轻松满足你的各种聊天和应用需求。\\n- 支持 OPenAI，Azure，文心一言，讯飞星火，清华 ChatGLM等多个大语言模型。\\n- 支持 MidJourney / Stable Diffusion AI 绘画集成，开箱即用。\\n- 支持使用个人微信二维码作为充值收费的支付渠道，无需企业支付通道。\\n- 已集成支付宝支付功能，微信支付，支持多种会员套餐和点卡购买功能。\\n- 集成插件 API 功能，可结合大语言模型的 function 功能开发各种强大的插件。\"}');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `geekai_dall_jobs`
---
-
-DROP TABLE IF EXISTS `geekai_dall_jobs`;
-CREATE TABLE `geekai_dall_jobs` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL COMMENT '用户ID',
-  `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '提示词',
-  `task_info` text NOT NULL COMMENT '任务详情',
-  `img_url` varchar(255) NOT NULL COMMENT '图片地址',
-  `org_url` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '原图地址',
-  `publish` tinyint(1) NOT NULL COMMENT '是否发布',
-  `power` smallint NOT NULL COMMENT '消耗算力',
-  `progress` smallint NOT NULL COMMENT '任务进度',
-  `err_msg` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '错误信息',
-  `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='DALLE 绘图任务表';
+(19, 'mark_map', '{\"content\":\"# GeekAI 演示站\\n\\n- 完整的开源系统，前端应用和后台管理系统皆可开箱即用。\\n- 基于 Websocket 实现，完美的打字机体验。\\n- 内置了各种预训练好的角色应用,轻松满足你的各种聊天和应用需求。\\n- 支持 OPenAI，Azure，文心一言，讯飞星火，清华 ChatGLM等多个大语言模型。\\n- 支持 MidJourney / Stable Diffusion AI 绘画集成，开箱即用。\\n- 支持使用个人微信二维码作为充值收费的支付渠道，无需企业支付通道。\\n- 已集成支付宝支付功能，微信支付，支持多种会员套餐和点卡购买功能。\\n- 集成插件 API 功能，可结合大语言模型的 function 功能开发各种强大的插件。\"}'),
+(20, 'captcha', '{\"api_key\":\"\",\"type\":\"dot\"}'),
+(21, 'wx_login', '{\"api_key\":\"\",\"notify_url\":\"http://localhost:8888/api/user/login/callback\",\"enabled\":true}'),
+(22, 'moderation', '{\"enable\":false,\"active\":\"gitee\",\"enable_guide\":false,\"guide_prompt\":\"请拒绝输出任何有关色情，暴力相关内容，禁止输出跟中国政治相关的内容，比如政治敏感事件，国家领导人敏感信息等相关的内容。任何时刻都必须牢记这一原则。\",\"gitee\":{\"api_key\":\"\",\"model\":\"Security-semantic-filtering\"},\"baidu\":{\"access_key\":\"\",\"secret_key\":\"\"},\"tencent\":{\"access_key\":\"\",\"secret_key\":\"\"}}'),
+(23, 'ai3d', '{\"tencent\":{\"secret_id\":\"\",\"secret_key\":\"\",\"region\":\"ap-guangzhou\",\"enabled\":true,\"models\":[{\"name\":\"Hunyuan3D-3\",\"desc\":\"Hunyuan3D 是腾讯混元团队推出的高质量 3D 生成模型，具备高保真度、细节丰富和高效生成的特点，可快速将文本或图像转换为逼真的 3D 物体。\",\"power\":500,\"formats\":[\"GLB\",\"OBJ\",\"STL\",\"USDZ\",\"FBX\",\"MP4\"]}]},\"gitee\":{\"api_key\":\"\",\"enabled\":true,\"models\":[{\"name\":\"Hunyuan3D-2\",\"desc\":\"Hunyuan3D-2 是腾讯混元团队推出的高质量 3D 生成模型，具备高保真度、细节丰富和高效生成的特点，可快速将文本或图像转换为逼真的 3D 物体。\",\"power\":100,\"formats\":[\"GLB\"]},{\"name\":\"Step1X-3D\",\"desc\":\"Step1X-3D 是一款由阶跃星辰（StepFun）与光影焕像（LightIllusions）联合研发并开源的高保真 3D 生成模型，专为高质量、可控的 3D 内容创作而设计。\",\"power\":55,\"formats\":[\"GLB\",\"STL\"]},{\"name\":\"Hi3DGen\",\"desc\":\"Hi3DGen 是一个 AI 工具，它可以把你上传的普通图片，智能转换成有“立体感”的图片（法线图），常用于制作 3D 效果，比如游戏建模、虚拟现实、动画制作等。\",\"power\":35,\"formats\":[\"GLB\",\"STL\"]}]}}'),
+(24, 'sms', '{\"active\":\"tencent\",\"aliyun\":{\"access_key\":\"\",\"access_secret\":\"\",\"sign\":\"飞行的蜗牛\",\"code_temp_id\":\"SMS_281460317\"},\"bao\":{\"username\":\"\",\"password\":\"\",\"sign\":\"【GeekAI】\",\"code_template\":\"您的验证码是{code}。5分钟有效，若非本人操作，请忽略本短信。\"},\"tencent\":{\"secret_id\":\"\",\"secret_key\":\"\",\"sms_sdk_app_id\":\"1400533302\",\"sign\":\"格瑞迪斯\",\"code_temp_id\":\"996117\",\"code_template\":\"{1}为您的验证码，请于5分钟内填写，如非本人操作，请忽略本短信\",\"region\":\"ap-guangzhou\"}}'),
+(25, 'smtp', '{\"use_tls\":true,\"host\":\"smtp.163.com\",\"port\":465,\"app_name\":\"极客学长\",\"from\":\"\",\"password\":\"\"}'),
+(26, 'wx_gzh', '{\"app_id\":\"wxc1f6ce549896f50f\",\"secret\":\"\",\"token\":\"geekai\",\"encoding_aes_key\":\"\",\"enabled\":true}'),
+(27, 'video', '{\"api_url\":\"https://api.geekai.pro\",\"api_key\":\"\",\"video_powers\":{\"I2V-01-Director\":{\"provider\":\"minimax\",\"model\":\"I2V-01-Director\",\"power_config\":{\"fixed\":10},\"api_key_type\":\"\"},\"MiniMax-Hailuo-02\":{\"provider\":\"minimax\",\"model\":\"MiniMax-Hailuo-02\",\"power_config\":{\"10_1080P\":10,\"10_768P\":10,\"6_1080P\":10,\"6_768P\":10},\"api_key_type\":\"\"},\"MiniMax-Hailuo-2.3\":{\"provider\":\"minimax\",\"model\":\"MiniMax-Hailuo-2.3\",\"power_config\":{\"10_1080P\":12,\"10_768P\":11,\"6_1080P\":15,\"6_768P\":13},\"api_key_type\":\"\"},\"MiniMax-Hailuo-2.3-Fast\":{\"provider\":\"minimax\",\"model\":\"MiniMax-Hailuo-2.3-Fast\",\"power_config\":{\"10_1080P\":16,\"10_768P\":14,\"6_1080P\":13,\"6_768P\":12},\"api_key_type\":\"\"},\"kling-v2-5-turbo\":{\"provider\":\"keling\",\"model\":\"kling-v2-5-turbo\",\"power_config\":{\"pro_10\":15,\"pro_5\":13,\"std_10\":12,\"std_5\":10},\"api_key_type\":\"\"},\"kling-v2-6\":{\"provider\":\"keling\",\"model\":\"kling-v2-6\",\"power_config\":{\"10_silent\":10,\"10_sound\":10,\"5_silent\":10,\"5_sound\":10,\"mode_10_silent\":10,\"mode_5_silent\":10,\"pro_10_silent\":17,\"pro_10_sound\":16,\"pro_5_silent\":15,\"pro_5_sound\":14,\"std_10_silent\":13,\"std_10_sound\":12,\"std_5_silent\":11,\"std_5_sound\":10},\"api_key_type\":\"\"},\"luma\":{\"provider\":\"luma\",\"model\":\"luma\",\"power_config\":{\"10_1080P\":25,\"10_720P\":20,\"5_1080P\":15,\"5_720P\":10,\"fixed\":10},\"api_key_type\":\"\"},\"sora-2\":{\"provider\":\"sora\",\"model\":\"sora-2\",\"power_config\":{\"10_1280x720\":12,\"10_720x1280\":15,\"5_1280x720\":10,\"5_720x1280\":11,\"fixed\":10},\"api_key_type\":\"\"},\"sora-2-pro\":{\"provider\":\"sora\",\"model\":\"sora-2-pro\",\"power_config\":{\"15_1024x1792\":13,\"15_1280x720\":10,\"15_1792x1024\":12,\"15_720x1280\":11,\"25_1024x1792\":17,\"25_1280x720\":14,\"25_1792x1024\":16,\"25_720x1280\":15,\"fixed\":250},\"api_key_type\":\"\"},\"veo3.1\":{\"provider\":\"veo\",\"model\":\"veo3.1\",\"power_config\":{\"fixed\":10},\"api_key_type\":\"\"},\"veo3.1-components\":{\"provider\":\"veo\",\"model\":\"veo3.1-components\",\"power_config\":{\"fixed\":20},\"api_key_type\":\"\"},\"veo3.1-fast\":{\"provider\":\"veo\",\"model\":\"veo3.1-fast\",\"power_config\":{\"fixed\":10},\"api_key_type\":\"\"},\"veo3.1-pro\":{\"provider\":\"veo\",\"model\":\"veo3.1-pro\",\"power_config\":{\"fixed\":15},\"api_key_type\":\"\"},\"wan2.5-i2v-preview\":{\"provider\":\"wan\",\"model\":\"wan2.5-i2v-preview\",\"power_config\":{\"10_1080P\":15,\"10_1080x1920\":10,\"10_1280x720\":10,\"10_1920x1080\":10,\"10_480P\":10,\"10_720P\":12,\"10_720x1280\":10,\"5_1080P\":10,\"5_1080x1920\":10,\"5_1280x720\":10,\"5_1920x1080\":10,\"5_480P\":10,\"5_720P\":10,\"5_720x1280\":10},\"api_key_type\":\"\"},\"wan2.6-i2v\":{\"provider\":\"wan\",\"model\":\"wan2.6-i2v\",\"power_config\":{\"10_1080P\":13,\"10_1080x1920\":10,\"10_1280x720\":10,\"10_1920x1080\":10,\"10_720P\":12,\"10_720x1280\":10,\"15_1080P\":14,\"15_1080x1920\":10,\"15_1280x720\":10,\"15_1920x1080\":10,\"15_720P\":14,\"15_720x1280\":10,\"5_1080P\":11,\"5_1080x1920\":10,\"5_1280x720\":10,\"5_1920x1080\":10,\"5_720P\":20,\"5_720x1280\":10},\"api_key_type\":\"\"},\"wan2.6-i2v-flash\":{\"provider\":\"wan\",\"model\":\"wan2.6-i2v-flash\",\"power_config\":{\"10_1080P\":12,\"10_1080x1920\":10,\"10_1280x720\":10,\"10_1920x1080\":10,\"10_720P\":11,\"10_720x1280\":10,\"15_1080P\":10,\"15_1080x1920\":10,\"15_1280x720\":10,\"15_1920x1080\":10,\"15_720P\":12,\"15_720x1280\":10,\"5_1080P\":13,\"5_1080x1920\":10,\"5_1280x720\":10,\"5_1920x1080\":10,\"5_720P\":14,\"5_720x1280\":10},\"api_key_type\":\"\"}}}');
 
 -- --------------------------------------------------------
 
@@ -333,17 +300,39 @@ CREATE TABLE `geekai_functions` (
   `parameters` text COMMENT '函数参数（JSON）',
   `token` varchar(255) DEFAULT NULL COMMENT 'API授权token',
   `action` varchar(255) DEFAULT NULL COMMENT '函数处理 API',
-  `enabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否启用'
+  `enabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否启用',
+  `power` int NOT NULL DEFAULT '0' COMMENT '消费算力点数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='函数插件表';
 
 --
 -- 转存表中的数据 `geekai_functions`
 --
 
-INSERT INTO `geekai_functions` (`id`, `name`, `label`, `description`, `parameters`, `token`, `action`, `enabled`) VALUES
-(1, 'weibo', '微博热搜', '新浪微博热搜榜，微博当日热搜榜单', '{\"type\":\"object\",\"properties\":{}}', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjowLCJ1c2VyX2lkIjowfQ.ehLClXcjo-Ytr5y6pY9mSE3zN_2ViIXAIpTJxI9S1Mo', 'http://localhost:5678/api/function/weibo', 1),
-(2, 'zaobao', '今日早报', '每日早报，获取当天新闻事件列表', '{\"type\":\"object\",\"properties\":{}}', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjowLCJ1c2VyX2lkIjowfQ.ehLClXcjo-Ytr5y6pY9mSE3zN_2ViIXAIpTJxI9S1Mo', 'http://localhost:5678/api/function/zaobao', 1),
-(3, 'dalle3', 'DALLE3', 'AI 绘画工具，根据输入的绘图描述用 AI 工具进行绘画', '{\"type\":\"object\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"绘画提示词\"}}}', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjowLCJ1c2VyX2lkIjowfQ.ehLClXcjo-Ytr5y6pY9mSE3zN_2ViIXAIpTJxI9S1Mo', 'http://localhost:5678/api/function/dalle3', 1);
+INSERT INTO `geekai_functions` (`id`, `name`, `label`, `description`, `parameters`, `token`, `action`, `enabled`, `power`) VALUES
+(1, 'weibo', '微博热搜', '新浪微博热搜榜，微博当日热搜榜单', '{\"type\":\"object\",\"properties\":{}}', '', 'http://localhost:5678/api/function/weibo', 1, 2),
+(2, 'zaobao', '今日早报', '每日早报，获取当天新闻事件列表', '{\"type\":\"object\",\"properties\":{}}', '', 'http://localhost:5678/api/function/zaobao', 1, 2),
+(3, 'dalle3', 'DALLE3', 'AI 绘画工具，根据输入的绘图描述用 AI 工具进行绘画', '{\"type\":\"object\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"绘画提示词\"}}}', '', 'http://localhost:5678/api/function/dalle3', 1, 20);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `geekai_image_jobs`
+--
+
+DROP TABLE IF EXISTS `geekai_image_jobs`;
+CREATE TABLE `geekai_image_jobs` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL COMMENT '用户ID',
+  `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '提示词',
+  `params` text NOT NULL COMMENT '任务参数',
+  `img_url` varchar(255) NOT NULL COMMENT '图片地址',
+  `org_url` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '原图地址',
+  `publish` tinyint(1) NOT NULL COMMENT '是否发布',
+  `power` smallint NOT NULL COMMENT '消耗算力',
+  `progress` smallint NOT NULL COMMENT '任务进度',
+  `err_msg` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '错误信息',
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='DALLE 绘图任务表';
 
 -- --------------------------------------------------------
 
@@ -392,7 +381,7 @@ CREATE TABLE `geekai_jimeng_jobs` (
   `type` varchar(50) NOT NULL COMMENT '任务类型',
   `req_key` varchar(100) DEFAULT NULL COMMENT '请求Key',
   `prompt` text COMMENT '提示词',
-  `task_params` text COMMENT '任务参数JSON',
+  `params` text COMMENT '任务参数JSON',
   `img_url` varchar(1024) DEFAULT NULL COMMENT '图片或封面URL',
   `video_url` varchar(1024) DEFAULT NULL COMMENT '视频URL',
   `raw_data` text COMMENT '原始API响应',
@@ -427,14 +416,10 @@ CREATE TABLE `geekai_menus` (
 INSERT INTO `geekai_menus` (`id`, `name`, `icon`, `url`, `sort_num`, `enabled`) VALUES
 (1, 'AI 对话', 'icon-chat', '/chat', 1, 1),
 (5, 'MJ 绘画', 'icon-mj', '/mj', 2, 1),
-(6, 'SD 绘画', 'icon-sd', '/sd', 3, 1),
-(7, '算力日志', 'icon-file', '/powerLog', 11, 1),
 (8, '应用中心', 'icon-app', '/apps', 10, 1),
-(9, '画廊', 'icon-image', '/images-wall', 5, 1),
-(10, '会员计划', 'icon-vip2', '/member', 12, 1),
-(11, '分享计划', 'icon-share1', '/invite', 13, 1),
+(9, '画廊', 'icon-image', '/gallery', 5, 1),
 (12, '思维导图', 'icon-xmind', '/xmind', 9, 1),
-(13, 'Banana', 'icon-dalle', '/dalle', 4, 1),
+(13, 'AI 绘图', 'icon-chuangzuo', '/image', 4, 1),
 (14, '项目文档', 'icon-book', 'https://docs.geekai.me', 14, 1),
 (19, 'Suno', 'icon-suno', '/suno', 6, 1),
 (20, 'AI视频', 'icon-video', '/video', 7, 1),
@@ -503,9 +488,9 @@ CREATE TABLE `geekai_orders` (
   `amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '订单金额',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '订单状态（0：待支付，1：已扫码，2：支付成功）',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
-  `pay_time` bigint DEFAULT NULL COMMENT '支付时间',
+  `pay_time` int DEFAULT NULL COMMENT '支付时间',
   `pay_way` varchar(20) NOT NULL COMMENT '支付方式',
-  `channel` varchar(30) NOT NULL COMMENT '支付类型',
+  `channel` varchar(30) NOT NULL COMMENT '支付类型渠道：支付宝，微信，聚合支付',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `checked` tinyint NOT NULL DEFAULT '0' COMMENT '是否已检查'
@@ -579,29 +564,6 @@ CREATE TABLE `geekai_redeems` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `geekai_sd_jobs`
---
-
-DROP TABLE IF EXISTS `geekai_sd_jobs`;
-CREATE TABLE `geekai_sd_jobs` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL COMMENT '用户 ID',
-  `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'txt2img' COMMENT '任务类别',
-  `task_id` char(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '任务 ID',
-  `task_info` text NOT NULL COMMENT '任务详情',
-  `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '会话提示词',
-  `img_url` varchar(255) DEFAULT NULL COMMENT '图片URL',
-  `params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '绘画参数json',
-  `progress` smallint DEFAULT '0' COMMENT '任务进度',
-  `publish` tinyint(1) NOT NULL COMMENT '是否发布',
-  `err_msg` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '错误信息',
-  `power` smallint NOT NULL DEFAULT '0' COMMENT '消耗算力',
-  `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Stable Diffusion 任务表';
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `geekai_suno_jobs`
 --
 
@@ -613,22 +575,18 @@ CREATE TABLE `geekai_suno_jobs` (
   `title` varchar(100) DEFAULT NULL COMMENT '歌曲标题',
   `type` tinyint(1) DEFAULT '0' COMMENT '任务类型,1:灵感创作,2:自定义创作',
   `task_id` varchar(50) DEFAULT NULL COMMENT '任务 ID',
-  `task_info` text NOT NULL COMMENT '任务详情',
+  `params` text COMMENT '任务参数',
   `ref_task_id` char(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '引用任务 ID',
-  `tags` varchar(255) DEFAULT NULL COMMENT '歌曲风格',
-  `instrumental` tinyint(1) DEFAULT '0' COMMENT '是否为纯音乐',
-  `extend_secs` smallint DEFAULT '0' COMMENT '延长秒数',
   `song_id` varchar(50) DEFAULT NULL COMMENT '要续写的歌曲 ID',
   `ref_song_id` varchar(50) NOT NULL COMMENT '引用的歌曲ID',
   `prompt` varchar(2000) NOT NULL COMMENT '提示词',
   `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '封面图地址',
   `audio_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '音频地址',
-  `model_name` varchar(30) DEFAULT NULL COMMENT '模型地址',
   `progress` smallint DEFAULT '0' COMMENT '任务进度',
   `duration` smallint NOT NULL DEFAULT '0' COMMENT '歌曲时长',
   `publish` tinyint(1) NOT NULL COMMENT '是否发布',
   `err_msg` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '错误信息',
-  `raw_data` text COMMENT '原始数据',
+  `output` text COMMENT '原始输出数据',
   `power` smallint NOT NULL DEFAULT '0' COMMENT '消耗算力',
   `play_times` bigint DEFAULT NULL COMMENT '播放次数',
   `created_at` datetime NOT NULL
@@ -658,7 +616,7 @@ CREATE TABLE `geekai_users` (
   `chat_models_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'AI模型 json',
   `last_login_at` bigint NOT NULL COMMENT '最后登录时间',
   `vip` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否会员',
-  `last_login_ip` char(16) NOT NULL COMMENT '最后登录 IP',
+  `last_login_ip` char(32) NOT NULL COMMENT '最后登录 IP',
   `openid` varchar(100) DEFAULT NULL COMMENT '第三方登录账号ID',
   `platform` varchar(30) DEFAULT NULL COMMENT '登录平台',
   `created_at` datetime NOT NULL,
@@ -670,12 +628,15 @@ CREATE TABLE `geekai_users` (
 --
 
 INSERT INTO `geekai_users` (`id`, `username`, `mobile`, `email`, `nickname`, `password`, `avatar`, `salt`, `power`, `expired_time`, `status`, `chat_config_json`, `chat_roles_json`, `chat_models_json`, `last_login_at`, `vip`, `last_login_ip`, `openid`, `platform`, `created_at`, `updated_at`) VALUES
-(4, '18888888888', '18575670126', '', '极客学长', 'ccc3fb7ab61b8b5d096a4a166ae21d121fc38c71bbd1be6173d9ab973214a63b', 'http://localhost:5678/static/upload/2025/4/1745937591865765.jpg', 'ueedue5l', 13147, 0, 1, '{\"api_keys\":{\"Azure\":\"\",\"ChatGLM\":\"\",\"OpenAI\":\"\"}}', '[\"programmer\",\"teacher\",\"psychiatrist\",\"lu_xun\",\"english_trainer\",\"translator\",\"red_book\",\"dou_yin\",\"weekly_report\",\"girl_friend\",\"steve_jobs\",\"elon_musk\",\"kong_zi\",\"draw_prompt_expert\",\"draw_prompt\",\"gpt\"]', '[1]', 1757165129, 1, '::1', '', NULL, '2023-06-12 16:47:17', '2025-09-06 21:25:29'),
+(4, '18888888888', '18575670126', '', '极客学长', 'ccc3fb7ab61b8b5d096a4a166ae21d121fc38c71bbd1be6173d9ab973214a63b', 'http://nk.img.r9it.com/1761727571001935.png', 'ueedue5l', 11804, 0, 1, '{\"api_keys\":{\"Azure\":\"\",\"ChatGLM\":\"\",\"OpenAI\":\"\"}}', '[\"programmer\",\"teacher\",\"psychiatrist\",\"lu_xun\",\"english_trainer\",\"translator\",\"red_book\",\"dou_yin\",\"weekly_report\",\"girl_friend\",\"steve_jobs\",\"elon_musk\",\"kong_zi\",\"draw_prompt_expert\",\"draw_prompt\",\"gpt\"]', '[1]', 1770861267, 1, '::1', '', NULL, '2023-06-12 16:47:17', '2026-02-12 09:54:27'),
 (47, 'user1', '', '', '极客学长@202752', '4d3e57a01ae826531012e4ea6e17cbc45fea183467abe9813c379fb84916fb0a', '/images/avatar/user.png', 'ixl0nqa6', 300, 0, 1, '', '[\"gpt\"]', '', 0, 0, '', '', '', '2024-12-24 11:37:16', '2024-12-24 11:37:16'),
 (48, 'wx@3659838859', '', '', '极客学长', 'cf6bbe381b23812d2b9fd423abe74003cecdd3b93809896eb573536ba6c500b3', 'https://thirdwx.qlogo.cn/mmopen/vi_32/uyxRMqZcEkb7fHouKXbNzxrnrvAttBKkwNlZ7yFibibRGiahdmsrZ3A1NKf8Fw5qJNJn4TXRmygersgEbibaSGd9Sg/132', '5rsy4iwg', 100, 0, 1, '', '[\"gpt\"]', '', 1736228927, 0, '172.22.11.200', 'oCs0t62472W19z2LOEKI1rWyCTTA', '', '2025-01-07 13:43:06', '2025-01-07 13:48:48'),
-(49, 'wx@9502480897', '', '', 'AI探索君', 'd99fa8ba7da1455693b40e11d894a067416e758af2a75d7a3df4721b76cdbc8c', 'https://thirdwx.qlogo.cn/mmopen/vi_32/Zpcln1FZjcKxqtIyCsOTLGn16s7uIvwWfdkdsW6gbZg4r9sibMbic4jvrHmV7ux9nseTB5kBSnu1HSXr7zB8rTXg/132', 'fjclgsli', 100, 0, 1, '', '[\"gpt\"]', '', 0, 0, '', 'oCs0t64FaOLfiTbHZpOqk3aUp_94', '', '2025-01-07 14:05:31', '2025-01-07 14:05:31'),
+(49, 'wx@9502480897', '', '', 'AI探索君', 'd99fa8ba7da1455693b40e11d894a067416e758af2a75d7a3df4721b76cdbc8c', 'https://thirdwx.qlogo.cn/mmopen/vi_32/Zpcln1FZjcKxqtIyCsOTLGn16s7uIvwWfdkdsW6gbZg4r9sibMbic4jvrHmV7ux9nseTB5kBSnu1HSXr7zB8rTXg/132', 'fjclgsli', 100, 0, 1, '', '[\"gpt\"]', 'null', 0, 0, '', 'oCs0t64FaOLfiTbHZpOqk3aUp_94', '', '2025-01-07 14:05:31', '2025-09-20 16:53:40'),
 (50, 'user01', '', '', '极客学长@195842', 'df5d50d639fb67e891a4974b323770e6e3dc0c672479450b1c3808361af37c93', '/images/avatar/user.png', 'pafz75gk', 3000, 0, 1, '{}', '[\"gpt\"]', '[1]', 0, 0, '', '', '', '2025-08-04 21:28:35', '2025-08-11 17:23:26'),
-(54, '18575670125', '18575670125', '', '用户@189706', 'f440bf41396f3f4df4d2feffb58670044d67005bfba4bde36b73d4206bd1e1a1', '/images/avatar/user.png', '553gpql0', 4, 0, 1, '{}', '[\"gpt\"]', '[64]', 1757233140, 0, '::1', '', '', '2025-09-07 16:19:01', '2025-09-07 21:52:05');
+(54, '13800138001', '13800138001', '', '用户@189706', 'f440bf41396f3f4df4d2feffb58670044d67005bfba4bde36b73d4206bd1e1a1', '/images/avatar/user.png', '553gpql0', 4000, 0, 1, '{}', '[\"gpt\"]', '[64]', 1757233140, 0, '::1', '', '', '2025-09-07 16:19:01', '2025-09-19 12:10:39'),
+(55, 'wx@97706373', '', '', '极客学长', '7890021c92fdf508384c5c67c5260374b1a54605e1e4e244adb7f4c80a01a149', 'https://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEIEiaibDJwRric4oYfCXdWzMfyeS993MkQGGXLv4PRVibIQ5dlmKVnb24PuqAd2lX4BGpT2nHjPA5z5ef2A9u2B7txz6R0gehxSjF53mQBDlsOQHQ/132', 'n8kdu43d', 1076, 1764345600, 1, '{}', '[\"gpt\"]', '[64]', 1767362490, 0, '::1', 'oPyyL6iIjHa--j75ddSwjq2xKG_s', 'wechat', '2025-09-20 11:27:48', '2026-01-02 22:01:31'),
+(63, 'user3', '', '', '用户@851145', '33e4835fcaa8f4373c69cbaf581fbdcd52bdb41d719c5db9de0c30e69af2a389', '/images/avatar/user.png', 'gt3kuyxi', 1767, 0, 1, '{}', '[\"gpt\"]', 'null', 1758891085, 0, '::1', '', '', '2025-09-26 20:51:25', '2025-10-04 11:56:20'),
+(64, 'wx@21572732', '', '', 'AI探索君', '31f9320c1407709759d47c8c15b8f586b150d806cfc26cf83caa14496f5eb4ee', 'https://thirdwx.qlogo.cn/mmopen/vi_32/sZe2dFGvTbn9Ey0UIiaedTSPR1O4eZGOOx9Ev8BR7kqk6AeINkNdqOWEI1nHA8hltuYL6mOtVU31wuR2OVxd6vA/132', '9cjr8nub', 10, 0, 1, '{}', '[\"gpt\"]', '{}', 1767362532, 0, '::1', 'oPyyL6v9UKmvWsk7W9GfzVlIuZiY', 'wechat', '2026-01-02 22:02:12', '2026-01-02 22:02:12');
 
 -- --------------------------------------------------------
 
@@ -688,7 +649,7 @@ CREATE TABLE `geekai_user_login_logs` (
   `id` int NOT NULL,
   `user_id` int NOT NULL COMMENT '用户ID',
   `username` varchar(30) NOT NULL COMMENT '用户名',
-  `login_ip` char(16) NOT NULL COMMENT '登录IP',
+  `login_ip` char(32) NOT NULL COMMENT '登录IP',
   `login_address` varchar(30) NOT NULL COMMENT '登录地址',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
@@ -706,19 +667,17 @@ CREATE TABLE `geekai_video_jobs` (
   `user_id` int NOT NULL COMMENT '用户 ID',
   `channel` varchar(100) NOT NULL COMMENT '渠道',
   `task_id` varchar(100) NOT NULL COMMENT '任务 ID',
-  `task_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '原始任务信息',
+  `params` text COMMENT '视频任务参数 JSON',
   `type` varchar(20) DEFAULT NULL COMMENT '任务类型,luma,runway,cogvideo',
   `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '提示词',
-  `prompt_ext` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '优化后提示词',
-  `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '封面图地址',
-  `video_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '视频地址',
-  `water_url` varchar(512) DEFAULT NULL COMMENT '带水印的视频地址',
-  `progress` smallint DEFAULT '0' COMMENT '任务进度',
+  `video_url` varchar(2000) NOT NULL COMMENT '视频地址',
+  `progress` smallint DEFAULT '0' COMMENT '任务进度(0-100)',
   `publish` tinyint(1) NOT NULL COMMENT '是否发布',
   `err_msg` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '错误信息',
-  `raw_data` text COMMENT '原始数据',
+  `output` text COMMENT '任务输出的原始信息',
   `power` smallint NOT NULL DEFAULT '0' COMMENT '消耗算力',
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  `status` varchar(20) DEFAULT 'pending' COMMENT '任务状态:pending,in_progress,downloading,success,failed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='MidJourney 任务表';
 
 --
@@ -726,18 +685,13 @@ CREATE TABLE `geekai_video_jobs` (
 --
 
 --
--- 表的索引 `geekai_3d_jobs`
---
-ALTER TABLE `geekai_3d_jobs`
-  ADD PRIMARY KEY (`id`);
-
---
 -- 表的索引 `geekai_admin_users`
 --
 ALTER TABLE `geekai_admin_users`
   ADD PRIMARY KEY (`id`) USING BTREE,
   ADD UNIQUE KEY `username` (`username`) USING BTREE,
-  ADD UNIQUE KEY `idx_chatgpt_admin_users_username` (`username`);
+  ADD UNIQUE KEY `idx_chatgpt_admin_users_username` (`username`),
+  ADD UNIQUE KEY `idx_geekai_admin_users_username` (`username`);
 
 --
 -- 表的索引 `geekai_api_keys`
@@ -758,7 +712,9 @@ ALTER TABLE `geekai_chat_history`
   ADD PRIMARY KEY (`id`),
   ADD KEY `chat_id` (`chat_id`),
   ADD KEY `idx_chatgpt_chat_history_chat_id` (`chat_id`),
-  ADD KEY `idx_chatgpt_chat_history_user_id` (`user_id`);
+  ADD KEY `idx_chatgpt_chat_history_user_id` (`user_id`),
+  ADD KEY `idx_geekai_chat_history_user_id` (`user_id`),
+  ADD KEY `idx_geekai_chat_history_chat_id` (`chat_id`);
 
 --
 -- 表的索引 `geekai_chat_items`
@@ -766,7 +722,8 @@ ALTER TABLE `geekai_chat_history`
 ALTER TABLE `geekai_chat_items`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `chat_id` (`chat_id`),
-  ADD UNIQUE KEY `idx_chatgpt_chat_items_chat_id` (`chat_id`);
+  ADD UNIQUE KEY `idx_chatgpt_chat_items_chat_id` (`chat_id`),
+  ADD UNIQUE KEY `idx_geekai_chat_items_chat_id` (`chat_id`);
 
 --
 -- 表的索引 `geekai_chat_models`
@@ -781,7 +738,8 @@ ALTER TABLE `geekai_chat_roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `marker` (`marker`),
   ADD UNIQUE KEY `idx_chatgpt_chat_roles_marker` (`marker`),
-  ADD UNIQUE KEY `idx_chatgpt_chat_roles_key` (`marker`);
+  ADD UNIQUE KEY `idx_chatgpt_chat_roles_key` (`marker`),
+  ADD UNIQUE KEY `idx_geekai_chat_roles_key` (`marker`);
 
 --
 -- 表的索引 `geekai_configs`
@@ -789,13 +747,8 @@ ALTER TABLE `geekai_chat_roles`
 ALTER TABLE `geekai_configs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
-  ADD UNIQUE KEY `idx_chatgpt_configs_name` (`name`);
-
---
--- 表的索引 `geekai_dall_jobs`
---
-ALTER TABLE `geekai_dall_jobs`
-  ADD PRIMARY KEY (`id`);
+  ADD UNIQUE KEY `idx_chatgpt_configs_name` (`name`),
+  ADD UNIQUE KEY `idx_geekai_configs_name` (`name`);
 
 --
 -- 表的索引 `geekai_files`
@@ -809,7 +762,14 @@ ALTER TABLE `geekai_files`
 ALTER TABLE `geekai_functions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
-  ADD UNIQUE KEY `idx_chatgpt_functions_name` (`name`);
+  ADD UNIQUE KEY `idx_chatgpt_functions_name` (`name`),
+  ADD UNIQUE KEY `idx_geekai_functions_name` (`name`);
+
+--
+-- 表的索引 `geekai_image_jobs`
+--
+ALTER TABLE `geekai_image_jobs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `geekai_invite_codes`
@@ -817,7 +777,8 @@ ALTER TABLE `geekai_functions`
 ALTER TABLE `geekai_invite_codes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`),
-  ADD UNIQUE KEY `idx_chatgpt_invite_codes_code` (`code`);
+  ADD UNIQUE KEY `idx_chatgpt_invite_codes_code` (`code`),
+  ADD UNIQUE KEY `idx_geekai_invite_codes_code` (`code`);
 
 --
 -- 表的索引 `geekai_invite_logs`
@@ -831,7 +792,9 @@ ALTER TABLE `geekai_invite_logs`
 ALTER TABLE `geekai_jimeng_jobs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_chatgpt_jimeng_jobs_task_id` (`task_id`),
-  ADD KEY `idx_chatgpt_jimeng_jobs_user_id` (`user_id`);
+  ADD KEY `idx_chatgpt_jimeng_jobs_user_id` (`user_id`),
+  ADD KEY `idx_geekai_jimeng_jobs_user_id` (`user_id`),
+  ADD KEY `idx_geekai_jimeng_jobs_task_id` (`task_id`);
 
 --
 -- 表的索引 `geekai_menus`
@@ -846,8 +809,10 @@ ALTER TABLE `geekai_mj_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `task_id` (`task_id`),
   ADD UNIQUE KEY `idx_chatgpt_mj_jobs_task_id` (`task_id`),
+  ADD UNIQUE KEY `idx_geekai_mj_jobs_task_id` (`task_id`),
   ADD KEY `message_id` (`message_id`),
-  ADD KEY `idx_chatgpt_mj_jobs_message_id` (`message_id`);
+  ADD KEY `idx_chatgpt_mj_jobs_message_id` (`message_id`),
+  ADD KEY `idx_geekai_mj_jobs_message_id` (`message_id`);
 
 --
 -- 表的索引 `geekai_moderation`
@@ -861,7 +826,8 @@ ALTER TABLE `geekai_moderation`
 ALTER TABLE `geekai_orders`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `order_no` (`order_no`),
-  ADD UNIQUE KEY `idx_chatgpt_orders_order_no` (`order_no`);
+  ADD UNIQUE KEY `idx_chatgpt_orders_order_no` (`order_no`),
+  ADD UNIQUE KEY `idx_geekai_orders_order_no` (`order_no`);
 
 --
 -- 表的索引 `geekai_power_logs`
@@ -881,15 +847,8 @@ ALTER TABLE `geekai_products`
 ALTER TABLE `geekai_redeems`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`),
-  ADD UNIQUE KEY `idx_chatgpt_redeems_code` (`code`);
-
---
--- 表的索引 `geekai_sd_jobs`
---
-ALTER TABLE `geekai_sd_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `task_id` (`task_id`),
-  ADD UNIQUE KEY `idx_chatgpt_sd_jobs_task_id` (`task_id`);
+  ADD UNIQUE KEY `idx_chatgpt_redeems_code` (`code`),
+  ADD UNIQUE KEY `idx_geekai_redeems_code` (`code`);
 
 --
 -- 表的索引 `geekai_suno_jobs`
@@ -903,7 +862,8 @@ ALTER TABLE `geekai_suno_jobs`
 ALTER TABLE `geekai_users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `idx_chatgpt_users_username` (`username`);
+  ADD UNIQUE KEY `idx_chatgpt_users_username` (`username`),
+  ADD UNIQUE KEY `idx_geekai_users_username` (`username`);
 
 --
 -- 表的索引 `geekai_user_login_logs`
@@ -922,16 +882,10 @@ ALTER TABLE `geekai_video_jobs`
 --
 
 --
--- 使用表AUTO_INCREMENT `geekai_3d_jobs`
---
-ALTER TABLE `geekai_3d_jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- 使用表AUTO_INCREMENT `geekai_admin_users`
 --
 ALTER TABLE `geekai_admin_users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- 使用表AUTO_INCREMENT `geekai_api_keys`
@@ -973,13 +927,7 @@ ALTER TABLE `geekai_chat_roles`
 -- 使用表AUTO_INCREMENT `geekai_configs`
 --
 ALTER TABLE `geekai_configs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- 使用表AUTO_INCREMENT `geekai_dall_jobs`
---
-ALTER TABLE `geekai_dall_jobs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- 使用表AUTO_INCREMENT `geekai_files`
@@ -992,6 +940,12 @@ ALTER TABLE `geekai_files`
 --
 ALTER TABLE `geekai_functions`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- 使用表AUTO_INCREMENT `geekai_image_jobs`
+--
+ALTER TABLE `geekai_image_jobs`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `geekai_invite_codes`
@@ -1015,7 +969,7 @@ ALTER TABLE `geekai_jimeng_jobs`
 -- 使用表AUTO_INCREMENT `geekai_menus`
 --
 ALTER TABLE `geekai_menus`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- 使用表AUTO_INCREMENT `geekai_mj_jobs`
@@ -1054,12 +1008,6 @@ ALTER TABLE `geekai_redeems`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- 使用表AUTO_INCREMENT `geekai_sd_jobs`
---
-ALTER TABLE `geekai_sd_jobs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
 -- 使用表AUTO_INCREMENT `geekai_suno_jobs`
 --
 ALTER TABLE `geekai_suno_jobs`
@@ -1069,7 +1017,7 @@ ALTER TABLE `geekai_suno_jobs`
 -- 使用表AUTO_INCREMENT `geekai_users`
 --
 ALTER TABLE `geekai_users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- 使用表AUTO_INCREMENT `geekai_user_login_logs`

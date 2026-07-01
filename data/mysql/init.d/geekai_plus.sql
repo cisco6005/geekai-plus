@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 --
 -- 表的结构 `geekai_admin_users`
 --
+CREATE DATABASE IF NOT EXISTS `geekai_plus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `geekai_plus`;
 
 CREATE TABLE `geekai_admin_users` (
   `id` int NOT NULL,
